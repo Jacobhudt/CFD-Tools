@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Confirmed to work with OF7 (.org) version.
+Confirmed to work with v2021 (.com) version.
 
 Custom modification of perturbU utilities by Eugene de Villiers for perturbation in both stream, and spanwise direction in pipes.
 
@@ -64,6 +64,8 @@ int main(int argc, char *argv[])
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
             )
+
+        
         );
         dimensionedScalar nu
         (
@@ -141,10 +143,22 @@ int main(int argc, char *argv[])
         //Random perturbation(3456);
         Random perturbation(perturbationSeed);
 
+        //Set velocity = 0 to avoid addition if stream/span direction is changed
+        Info<< "Initializing U " << endl;
+        forAll(centers, celli)
+        {
+            U[celli][0] = 0;
+            U[celli][1] = 0;
+            U[celli][2] = 0;
+        }
+        U.write();
+
+        //Do pertubation
+        Info << "Performing pertubation" << endl;
+
         forAll(centers, celli)
         {
             scalar deviation=1.0 + 0.2*perturbation.GaussNormal<scalar>();
-
 
             scalar& Uz(U[celli].z());
             vector cCenter = centers[celli];
@@ -183,7 +197,7 @@ int main(int argc, char *argv[])
         Info<< "    No U" << endl;
     }
 
-    Info<< endl;
+    Info<< "Pertubation was successful. " << endl;
 
 
     return(0);

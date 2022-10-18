@@ -37,4 +37,6 @@ plt.plot(time,retau)
 plt.ylabel(f"Re_tau, avg = {avg}")
 plt.xlabel("time[s]")
 
+print(f'Average Re_tau over {time[-1]-time[0]} seconds = {avg}')
+
 plt.show()

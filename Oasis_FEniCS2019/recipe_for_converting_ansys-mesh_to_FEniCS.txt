@@ -1,3 +1,5 @@
+#### Does not currently work, as the cell array is sorted incorrectly in the cgns file from ansys ####
+
 "Quick" way to convert meshes created in ANSYS to one thats useable in FEniCS. 
 I could not find a working way to do this, so this document hopefully shows up in relevant google searches.
 

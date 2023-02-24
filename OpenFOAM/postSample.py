@@ -4,18 +4,19 @@ import shutil
 import argparse
 
 """ Script for postprocessing sampled outlet data, and moving it to the correct directory for
-    the timeVaryingMappedFixedValue boundary condition in OpenFOAM. Make sure to run it in the
-    top level of the case directory.
+	the timeVaryingMappedFixedValue boundary condition in OpenFOAM.
 """
-
-new = os.listdir(os.path.abspath(os.getcwd()) + "/postProcessing/sampleDict")
+project = os.path.abspath(os.getcwd())
+new = os.listdir(project + "/postProcessing/sampleDict")
 new.sort()
 
 start = float(new[0])
 end = float(new[-1])
 dt = float(new[1]) - float(new[0])
 
-os.rename("/postProcessing/sampleDict/" + new[0] + '/interface/faceCentres', 'points')
+os.rename(project + "/postProcessing/sampleDict/" + new[0] + '/interface/faceCentres', 'points')
+
+directory = project + "/postProcessing/sampleDict/" 
 
 for i in np.arange(start, end, dt):
 
@@ -24,14 +25,13 @@ for i in np.arange(start, end, dt):
 	if (j - int(j) == 0):
 		j = int(j)
 	
-	sourceU = "/postProcessing/sampleDict/" + f'{j}/interface/vectorField/U'
-	destinationU =  "/postProcessing/sampleDict/" + f'{j}/U'
-	sourceNUT = "/postProcessing/sampleDict/" + f'{j}/interface/scalarField/nut'
-	destinationNUT = "/postProcessing/sampleDict/" + f'{j}/nut'
+	sourceU = directory + f'{j}/interface/vectorField/U'
+	destinationU =  directory + f'{j}/U'
+	sourceNUT = directory + f'{j}/interface/scalarField/nut'
+	destinationNUT = directory + f'{j}/nut'
 
 	os.rename(sourceU, destinationU)
 	os.rename(sourceNUT, destinationNUT)
-	shutil.rmtree("/postProcessing/sampleDict/" + f'{j}/interface')
+	shutil.rmtree(directory + f'{j}/interface')
 	
-shutil.move("/postProcessing/sampleDict", "/constant/boundaryData/inlet")
-
+shutil.move(directory, project + "/constant/boundaryData/Inlet")
